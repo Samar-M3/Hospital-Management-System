@@ -1,0 +1,534 @@
+/* === Global Theme ========================================================= */
+.root-pane {
+    -fx-background-color: linear-gradient(to bottom right, #f8fbff, #eef3f9);
+    -fx-padding: 0;
+    -fx-font-family: "Segoe UI", "Inter", "SF Pro Display", Arial;
+    -fx-text-fill: #1b2430;
+}
+
+.navbar {
+    -fx-background-color: #0f7abf;
+    -fx-padding: 0 18;
+    -fx-alignment: CENTER_LEFT;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 16, 0, 0, 4);
+}
+
+.nav-brand {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 0.5px;
+}
+
+.nav-welcome {
+    -fx-text-fill: #f4f8ff;
+    -fx-font-size: 13px;
+}
+.nav-logo { -fx-text-fill: white; -fx-font-size: 20px; }
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: #0f172a;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0, 0, 6);
+}
+.side-title {
+    -fx-text-fill: #a5b4c7;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 0 0 8 8;
+}
+.side-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d9e3f5;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 12;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.side-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.06);
+}
+.side-btn-active, .side-btn:focused {
+    -fx-background-color: rgba(18,181,176,0.16);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(18,181,176,0.25), 14, 0, 0, 6);
+}
+.side-logout {
+    -fx-text-fill: #f8d7da;
+}
+.side-logout:hover {
+    -fx-background-color: rgba(242,85,85,0.14);
+}
+
+/* Content area */
+.content-scroll { -fx-background-color: transparent; }
+.content-scroll .viewport { -fx-background-color: transparent; }
+.content-root { -fx-fill-width: true; }
+.content-title { -fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: #0f172a; }
+.content-subtitle { -fx-font-size: 13px; -fx-text-fill: #374151; }
+.content-meta { -fx-font-size: 12px; -fx-text-fill: #4b5563; -fx-font-weight: 600; }
+
+.card-large {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 16, 0, 0, 8);
+    -fx-cursor: hand;
+}
+.card-large:hover { -fx-translate-y: -2; }
+.card-ghost {
+    -fx-background-color: linear-gradient(to bottom right, #eef6ff, #f7fffd);
+    -fx-background-radius: 18;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(15,122,191,0.10), 12, 0, 0, 6);
+}
+.card-title { -fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #0d1b2a; }
+.card-sub { -fx-font-size: 13px; -fx-text-fill: #3b4455; }
+.card-link { -fx-text-fill: #0f7abf; -fx-font-weight: 700; }
+
+.pill {
+    -fx-padding: 4 10;
+    -fx-background-radius: 999;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+.btn-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 8 14;
+    -fx-cursor: hand;
+}
+.btn-logout:hover {
+    -fx-background-color: rgba(255,255,255,0.12);
+}
+
+/* === Auth screens ======================================================== */
+.brand-panel {
+    -fx-background-color: linear-gradient(to bottom, #0f7abf, #0d5fa4);
+    -fx-alignment: CENTER;
+    -fx-padding: 40 32;
+    -fx-spacing: 8;
+    -fx-text-fill: white;
+}
+.brand-icon   { -fx-font-size: 34px; }
+.brand-title  { -fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: 800; }
+.brand-sub    { -fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 14px; }
+.brand-features { -fx-padding: 30 0 0 0; -fx-spacing: 10; }
+.brand-feature { -fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 13px; }
+
+.form-panel {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0, 0, 8);
+}
+.form-title    { -fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #0f172a; }
+.form-subtitle { -fx-font-size: 13px; -fx-text-fill: #6b7280; }
+.hint-label    { -fx-text-fill: #7b8794; -fx-font-size: 12px; }
+.link          { -fx-text-fill: #0f7abf; -fx-font-weight: 700; }
+.link:hover    { -fx-text-fill: #0c6aa6; }
+
+.input-field {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12 14;
+    -fx-font-size: 13px;
+}
+.input-field:focused {
+    -fx-border-color: #0f7abf;
+    -fx-effect: dropshadow(gaussian, rgba(15,122,191,0.20), 12, 0, 0, 4);
+}
+
+/* === Cards =============================================================== */
+.dash-card {
+    -fx-background-color: white;
+    -fx-padding: 16;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #e6edf5;
+    -fx-effect: dropshadow(gaussian, rgba(15,122,191,0.12), 18, 0, 0, 8);
+    -fx-transition: all 0.2s ease-in-out;
+}
+.dash-card:hover {
+    -fx-translate-y: -3;
+    -fx-effect: dropshadow(gaussian, rgba(15,122,191,0.18), 26, 0, 0, 10);
+}
+
+/* === Buttons ============================================================= */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #0f7abf, #12b5b0);
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-background-radius: 12;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #1086d0, #14c3bd);
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: #cfd8e3;
+    -fx-border-radius: 10;
+    -fx-text-fill: #0f7abf;
+    -fx-padding: 8 14;
+    -fx-cursor: hand;
+}
+.btn-ghost:hover {
+    -fx-border-color: #0f7abf;
+    -fx-text-fill: #0c6aa6;
+}
+
+/* === Form fields ========================================================= */
+.field-label {
+    -fx-text-fill: #4a5565;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.3px;
+}
+.field-input, .field-combo, .text-area {
+    -fx-background-color: white;
+    -fx-border-color: #d8dee9;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10 12;
+    -fx-font-size: 13px;
+}
+.field-input:focused, .field-combo:focused, .text-area:focused {
+    -fx-border-color: #0f7abf;
+    -fx-effect: dropshadow(gaussian, rgba(15,122,191,0.20), 12, 0, 0, 4);
+}
+
+/* === Tables ============================================================= */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #e6edf5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+.table-view .column-header-background {
+    -fx-background-color: #f4f7fb;
+    -fx-border-color: #e6edf5;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-size: 32px;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #e6edf5;
+    -fx-font-weight: 700;
+    -fx-text-fill: #4a5565;
+}
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+.table-row-cell:filled:hover {
+    -fx-background-color: #f0f7ff;
+}
+.table-row-cell:selected {
+    -fx-background-color: #e2f0ff;
+}
+.table-view .table-row-cell:selected .text {
+    -fx-fill: #0f172a;
+    -fx-font-weight: 700;
+}
+
+.tokens-table {
+    -fx-border-color: #d5deeb;
+}
+.tokens-table .column-header, .tokens-table .filler {
+    -fx-text-fill: #1f2937;
+}
+.tokens-table .table-row-cell .text {
+    -fx-fill: #0f172a;
+    -fx-font-weight: 600;
+}
+.tokens-table .table-row-cell:selected .text {
+    -fx-fill: #0f172a;
+}
+
+/* === Status Pills ======================================================== */
+.pill-waiting     { -fx-background-color: #fff7e0; -fx-text-fill: #d19b00; }
+.pill-inprogress  { -fx-background-color: #e5f0ff; -fx-text-fill: #1b6ad1; }
+.pill-completed   { -fx-background-color: #e4f8ed; -fx-text-fill: #18864a; }
+.pill-cancelled   { -fx-background-color: #ffeceb; -fx-text-fill: #d43d3d; }
+
+/* Utility labels */
+.error-label   { -fx-text-fill: #d43d3d;   -fx-font-weight: 600; }
+.success-label { -fx-text-fill: #18864a;   -fx-font-weight: 700; }
+
+/* Register specific */
+.logo-circle { -fx-fill: rgba(255,255,255,0.12); }
+.logo-plus   { -fx-fill: white; -fx-font-size: 32px; -fx-font-weight: 900; }
+.brand-tagline { -fx-text-fill: rgba(255,255,255,0.86); -fx-font-size: 13px; }
+.brand-footer  { -fx-text-fill: rgba(255,255,255,0.65); -fx-font-size: 11px; }
+.register-prompt { -fx-text-fill:#6b7280; }
+.register-link   { -fx-text-fill:#0f7abf; -fx-font-weight:700; }
+.register-link:hover { -fx-text-fill:#0c6aa6; }
+.scroll-transparent > .viewport { -fx-background-color: transparent; }
+
+/* === Doctor Dashboard (new) ============================================== */
+.dashboard-root {
+    -fx-background-color: linear-gradient(to bottom right, #f7fbff, #eef5ff);
+}
+.topbar {
+    -fx-padding: 14 22;
+    -fx-background-color: #0f172a;
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 14, 0, 0, 6);
+}
+.top-title { -fx-text-fill: #e8f1ff; -fx-font-size: 18px; -fx-font-weight: 800; }
+.top-subtitle { -fx-text-fill: #93a4c2; -fx-font-size: 12px; -fx-font-weight: 600; }
+.top-user { -fx-text-fill: #e8f1ff; -fx-font-size: 13px; -fx-font-weight: 700; }
+.top-search {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-background-color: #0e1d3a;
+    -fx-border-color: #1e293b;
+    -fx-text-fill: #e2e8f0;
+    -fx-prompt-text-fill: #64748b;
+    -fx-padding: 8 14;
+    -fx-min-width: 240;
+}
+.top-menu {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e8f1ff;
+    -fx-font-size: 18px;
+    -fx-padding: 6 10;
+    -fx-background-radius: 10;
+    -fx-border-color: #1e293b;
+    -fx-border-radius: 10;
+}
+.top-menu:hover { -fx-background-color: rgba(255,255,255,0.08); }
+
+.stat-card {
+    -fx-background-radius: 18;
+    -fx-padding: 16 18;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 6);
+}
+.stat-card:hover { -fx-translate-y: -2; }
+.stat-value { -fx-font-size: 32px; -fx-font-weight: 900; -fx-text-fill: #0f172a; }
+.accent-blue   { -fx-border-color: #c7ddff; -fx-border-width: 2; }
+.accent-teal   { -fx-border-color: #b3f0e6; -fx-border-width: 2; }
+.accent-gold   { -fx-border-color: #ffe7b8; -fx-border-width: 2; }
+.accent-purple { -fx-border-color: #dec8ff; -fx-border-width: 2; }
+.content-stack { -fx-background-color: transparent; }
+
+.notif-list {
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+}
+.notif-list .list-cell {
+    -fx-padding: 10 12;
+    -fx-background-color: transparent;
+}
+.notif-list .list-cell:filled:hover {
+    -fx-background-color: #f4f7fb;
+}
+
+.btn-ghost.danger { -fx-text-fill: #c53030; }
+.btn-ghost.danger:hover { -fx-border-color: #c53030; }
+
+/* === Doctor Dashboard New Styles ==================================== */
+.sidebar-header {
+    -fx-padding: 20 10 16 10;
+    -fx-background-color: rgba(255,255,255,0.05);
+}
+.sidebar-brand-icon {
+    -fx-font-size: 32px;
+}
+.sidebar-brand {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+.sidebar-separator {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-pref-height: 1;
+}
+
+.welcome-heading {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0f172a;
+}
+.welcome-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748b;
+    -fx-padding: 0 0 8 0;
+}
+
+.section-heading {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0f172a;
+}
+
+.stat-icon {
+    -fx-font-size: 24px;
+}
+.stat-value-large {
+    -fx-font-size: 36px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #0f172a;
+}
+
+.stat-card-blue {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 20;
+    -fx-border-radius: 16;
+    -fx-border-color: #dbeafe;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.1), 12, 0, 0, 6);
+}
+.stat-card-blue:hover { -fx-translate-y: -3; -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.2), 18, 0, 0, 10); }
+
+.stat-card-orange {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 20;
+    -fx-border-radius: 16;
+    -fx-border-color: #fed7aa;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.1), 12, 0, 0, 6);
+}
+.stat-card-orange:hover { -fx-translate-y: -3; -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.2), 18, 0, 0, 10); }
+
+.stat-card-green {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 20;
+    -fx-border-radius: 16;
+    -fx-border-color: #bbf7d0;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(22,163,74,0.1), 12, 0, 0, 6);
+}
+.stat-card-green:hover { -fx-translate-y: -3; -fx-effect: dropshadow(gaussian, rgba(22,163,74,0.2), 18, 0, 0, 10); }
+
+.stat-card-purple {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 20;
+    -fx-border-radius: 16;
+    -fx-border-color: #e9d5ff;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(168,85,247,0.1), 12, 0, 0, 6);
+}
+.stat-card-purple:hover { -fx-translate-y: -3; -fx-effect: dropshadow(gaussian, rgba(168,85,247,0.2), 18, 0, 0, 10); }
+
+.btn-action {
+    -fx-background-radius: 10;
+    -fx-padding: 12 16;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+.btn-action-blue {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+.btn-action-blue:hover { -fx-background-color: #2563eb; }
+
+.btn-action-green {
+    -fx-background-color: #22c55e;
+    -fx-text-fill: white;
+}
+.btn-action-green:hover { -fx-background-color: #16a34a; }
+
+.btn-action-red {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+}
+.btn-action-red:hover { -fx-background-color: #dc2626; }
+
+/* Consultation Box Styles */
+.consultation-box {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 6);
+}
+.consultation-input {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10 12;
+    -fx-font-size: 13px;
+}
+.consultation-input:focused {
+    -fx-border-color: #0f7abf;
+    -fx-effect: dropshadow(gaussian, rgba(15,122,191,0.15), 8, 0, 0, 4);
+}
+
+/* Analytics Card Styles */
+.analytics-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 30 40;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 6);
+}
+
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 18;
+    -fx-border-radius: 16;
+    -fx-border-color: #e6edf5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 8);
+}
+
+/* === Report Cards (Patient Dashboard) ============================= */
+.report-scroll .viewport { -fx-background-color: transparent; }
+.report-container { -fx-padding: 8 0; }
+
+.report-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 20;
+    -fx-spacing: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 6);
+}
+.report-card:hover { -fx-effect: dropshadow(gaussian, rgba(15,122,191,0.15), 18, 0, 0, 10); }
+
+.report-header {
+    -fx-background-color: linear-gradient(to right, #f0f7ff, #e8f5ff);
+    -fx-background-radius: 12;
+    -fx-padding: 14 18;
+    -fx-spacing: 12;
+}
+.report-doc-info { -fx-spacing: 4; }
+.report-doc-name { -fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #0f172a; }
+.report-date { -fx-font-size: 12px; -fx-text-fill: #64748b; }
+
+.report-section {
+    -fx-padding: 12 0;
+    -fx-spacing: 6;
+}
+.report-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #64748b;
+    -fx-letter-spacing: 0.5px;
+}
+.report-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #1e293b;
+    -fx-wrap-text: true;
+}
+
+.report-section-problem .report-value { -fx-text-fill: #dc2626; -fx-font-weight: 600; }
+.report-section-solution .report-value { -fx-text-fill: #059669; -fx-font-weight: 600; }
+.report-section-meds { -fx-background-color: #fef3c7; -fx-background-radius: 10; -fx-padding: 12; }
+.report-section-notes { -fx-background-color: #f0fdf4; -fx-background-radius: 10; -fx-padding: 12; }

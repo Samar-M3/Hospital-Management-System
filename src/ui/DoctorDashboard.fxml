@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.DoctorDashboardController"
+            prefWidth="1400" prefHeight="900"
+            styleClass="root-pane dashboard-root">
+
+    <!-- Top bar -->
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="topbar">
+            <Button fx:id="btnToggleSidebar" text="☰" onAction="#handleToggleSidebar" styleClass="top-menu"/>
+            <Label text="🏥" styleClass="brand-icon"/>
+            <VBox spacing="2">
+                <Label text="Doctor Dashboard" styleClass="top-title"/>
+                <Label fx:id="dateLabel" styleClass="top-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" promptText="🔍 Search patients..." styleClass="top-search" />
+            <Label fx:id="nextAppointmentLabel" styleClass="top-subtitle"/>
+            <Label fx:id="welcomeLabel" styleClass="top-user"/>
+            <Button text="Logout" onAction="#handleLogout" styleClass="btn-logout"/>
+        </HBox>
+    </top>
+
+    <!-- Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" spacing="6" styleClass="sidebar" prefWidth="250" alignment="TOP_CENTER">
+            <VBox spacing="2" alignment="CENTER" styleClass="sidebar-header">
+                <Label text="👨‍⚕️" styleClass="sidebar-brand-icon"/>
+                <Label text="Doctor Panel" styleClass="sidebar-brand"/>
+            </VBox>
+            <Separator styleClass="sidebar-separator"/>
+            <Label text="MENU" styleClass="side-title"/>
+            <Button fx:id="btnNavOverview" text="🏠  Overview"   styleClass="side-btn side-btn-active" onAction="#handleNavOverview"/>
+            <Button fx:id="btnNavPatients" text="👥  Patients"   styleClass="side-btn" onAction="#handleNavPatients" visible="false" managed="false"/>
+            <Button fx:id="btnNavAppointments" text="🎫  Tokens" styleClass="side-btn" onAction="#handleNavAppointments"/>
+            <Region VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </left>
+
+    <!-- Main content: separated sections -->
+    <center>
+        <StackPane styleClass="content-stack">
+
+            <!-- Overview Section -->
+            <VBox fx:id="overviewSection" spacing="20" styleClass="content-root">
+                <padding><Insets top="24" right="28" bottom="32" left="28"/></padding>
+
+                <Label text="Welcome, Doctor!" styleClass="welcome-heading"/>
+                <Label text="Here's your practice overview for today" styleClass="welcome-subtitle"/>
+
+                <!-- Stat cards -->
+                <HBox spacing="16">
+                    <StackPane styleClass="stat-card stat-card-blue" HBox.hgrow="ALWAYS">
+                        <VBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="👥" styleClass="stat-icon"/>
+                            <Label text="Total Patients" styleClass="card-title"/>
+                            <Label fx:id="totalPatientsValue" text="0" styleClass="stat-value-large"/>
+                            <Label text="Active profiles" styleClass="card-sub"/>
+                        </VBox>
+                    </StackPane>
+                    <StackPane styleClass="stat-card stat-card-orange" HBox.hgrow="ALWAYS">
+                        <VBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="⏳" styleClass="stat-icon"/>
+                            <Label text="Pending Tokens" styleClass="card-title"/>
+                            <Label fx:id="todayAppointmentsValue" text="0" styleClass="stat-value-large"/>
+                            <Label text="Awaiting approval" styleClass="card-sub"/>
+                        </VBox>
+                    </StackPane>
+                    <StackPane styleClass="stat-card stat-card-green" HBox.hgrow="ALWAYS">
+                        <VBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="✅" styleClass="stat-icon"/>
+                            <Label text="Approved" styleClass="card-title"/>
+                            <Label fx:id="waitingTokensValue" text="0" styleClass="stat-value-large"/>
+                            <Label text="Ready to consult" styleClass="card-sub"/>
+                        </VBox>
+                    </StackPane>
+                    <StackPane styleClass="stat-card stat-card-purple" HBox.hgrow="ALWAYS">
+                        <VBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="📈" styleClass="stat-icon"/>
+                            <Label text="Completion Rate" styleClass="card-title"/>
+                            <Label fx:id="completionRateValue" text="0%" styleClass="stat-value-large"/>
+                            <Label text="Completed visits" styleClass="card-sub"/>
+                        </VBox>
+                    </StackPane>
+                </HBox>
+
+                <!-- Upcoming & Notifications -->
+                <HBox spacing="20" alignment="TOP_LEFT">
+                    <StackPane styleClass="dash-card" HBox.hgrow="ALWAYS">
+                        <VBox spacing="8">
+                            <Label text="Next Token" styleClass="section-heading"/>
+                            <Label fx:id="nextAppointmentLabelOverview" text="No upcoming tokens" styleClass="welcome-heading"/>
+                            <Label text="Stay aligned with the queue. Details update automatically." styleClass="content-meta"/>
+                        </VBox>
+                    </StackPane>
+
+                    <VBox spacing="12" prefWidth="340">
+                        <Label text="🔔 Notifications" styleClass="section-heading"/>
+                        <ListView fx:id="notificationsList" prefHeight="200" styleClass="notif-list"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Patients Section -->
+            <VBox fx:id="patientsSection" spacing="12" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Patients" styleClass="content-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnAddPatient" text="➕ Add" onAction="#handleAddPatient" styleClass="btn-primary"/>
+                    <Button fx:id="btnEditPatient" text="✏️ Edit" onAction="#handleEditPatient" styleClass="btn-ghost"/>
+                    <Button fx:id="btnDeletePatient" text="🗑️ Delete" onAction="#handleDeletePatient" styleClass="btn-ghost danger"/>
+                </HBox>
+                <TableView fx:id="patientTable" prefHeight="540">
+                    <columns>
+                        <TableColumn fx:id="patientNameCol" text="Name" prefWidth="200"/>
+                        <TableColumn fx:id="patientAgeCol" text="Age" prefWidth="80"/>
+                        <TableColumn fx:id="patientGenderCol" text="Gender" prefWidth="100"/>
+                        <TableColumn fx:id="patientContactCol" text="Contact" prefWidth="200"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- Tokens Section -->
+            <VBox fx:id="appointmentsSection" spacing="16" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="24" right="28" bottom="32" left="28"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🎫 Token Management" styleClass="welcome-heading"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <TableView fx:id="tokenTable" prefHeight="320" styleClass="tokens-table">
+                    <columns>
+                        <TableColumn fx:id="tokenNumberCol" text="Token #" prefWidth="70"/>
+                        <TableColumn fx:id="tokenPatientCol" text="Patient" prefWidth="150"/>
+                        <TableColumn fx:id="tokenDeptCol" text="Department" prefWidth="140"/>
+                        <TableColumn fx:id="tokenProblemCol" text="Problem" prefWidth="200"/>
+                        <TableColumn fx:id="tokenRoomCol" text="Room" prefWidth="60"/>
+                        <TableColumn fx:id="tokenShiftCol" text="Shift" prefWidth="80"/>
+                        <TableColumn fx:id="tokenDateCol" text="Date" prefWidth="100"/>
+                        <TableColumn fx:id="tokenTimeCol" text="Time" prefWidth="90"/>
+                        <TableColumn fx:id="tokenStatusCol" text="Status" prefWidth="100"/>
+                    </columns>
+                </TableView>
+                <VBox spacing="12" styleClass="consultation-box">
+                    <Label text="📝 Consultation Notes" styleClass="section-heading"/>
+                    <HBox spacing="16">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Diagnosis" styleClass="field-label"/>
+                            <TextArea fx:id="taDiagnosis" promptText="Enter diagnosis..." prefHeight="50" wrapText="true" styleClass="consultation-input"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Medications" styleClass="field-label"/>
+                            <TextArea fx:id="taMedicines" promptText="Prescribed medicines..." prefHeight="50" wrapText="true" styleClass="consultation-input"/>
+                        </VBox>
+                    </HBox>
+                    <VBox spacing="6">
+                        <Label text="Doctor Notes / Follow-up" styleClass="field-label"/>
+                        <TextArea fx:id="taNotes" promptText="Additional notes..." prefHeight="50" wrapText="true" styleClass="consultation-input"/>
+                    </VBox>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Button text="✓ Approve" onAction="#handleApproveToken" styleClass="btn-action btn-action-blue"/>
+                        <Button text="✓ Complete" onAction="#handleCompleteToken" styleClass="btn-action btn-action-green"/>
+                        <Button text="✕ Cancel" onAction="#handleCancelToken" styleClass="btn-action btn-action-red"/>
+                        <Button text="↺ Undo Cancel" onAction="#handleUndoToken" styleClass="btn-action btn-action-blue"/>
+                        <Label fx:id="tokenActionMessage" styleClass="content-meta"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- Analytics Section -->
+           
+
+        </StackPane>
+    </center>
+
+</BorderPane>
+
+
+
+
+
+
+

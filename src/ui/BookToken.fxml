@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.BookTokenController"
+      prefWidth="1000" prefHeight="660"
+      styleClass="root-pane" spacing="0">
+
+    <!-- Navbar -->
+    <HBox styleClass="navbar" prefHeight="62" alignment="CENTER_LEFT" spacing="12">
+        <Label text="SHMS" styleClass="nav-brand"/>
+        <Label text="/ Create Token" style="-fx-text-fill:#3E5A70; -fx-font-size:14px;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="← Back" onAction="#goBack" styleClass="btn-logout"/>
+        <HBox.margin><Insets right="20"/></HBox.margin>
+    </HBox>
+
+    <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+        <!-- Left info panel -->
+        <VBox styleClass="brand-panel" prefWidth="320" spacing="20">
+            <VBox.margin><Insets top="50" left="40" right="30" bottom="40"/></VBox.margin>
+            <Label text="Create a Smart Token"
+                   style="-fx-font-size:22px; -fx-font-weight:700; -fx-text-fill:white;"/>
+            <Label text="Describe your health problem and we will route it to the right specialist automatically."
+                   style="-fx-font-size:13px; -fx-text-fill:#8899AA;" wrapText="true"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="Tokens are queued per specialization. You will see your number instantly."
+                   style="-fx-font-size:11px; -fx-text-fill:#445566;" wrapText="true"/>
+        </VBox>
+
+        <!-- Right form -->
+        <VBox HBox.hgrow="ALWAYS" spacing="20" alignment="TOP_LEFT">
+            <VBox.margin><Insets top="50" left="60" right="60" bottom="40"/></VBox.margin>
+
+            <VBox spacing="6">
+                <Label text="Health Problem" styleClass="field-label"/>
+                <ComboBox fx:id="cbProblem" editable="true" prefWidth="360" prefHeight="44"
+                          styleClass="field-combo" promptText="e.g. Ear Problem, Heart Problem"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Department / Specialization" styleClass="field-label"/>
+                <ComboBox fx:id="cbDepartment" prefWidth="360" prefHeight="44"
+                          styleClass="field-combo" promptText="Select department"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Additional Details (optional)" styleClass="field-label"/>
+                <TextArea fx:id="taDetails"
+                          promptText="Briefly describe your symptoms..."
+                          prefWidth="360" prefHeight="120" wrapText="true"
+                          style="-fx-background-color:white; -fx-border-color:#D8DCE8;
+                                 -fx-border-width:1.5; -fx-border-radius:10;
+                                 -fx-background-radius:10; -fx-font-size:13px; -fx-padding:10 14;"/>
+            </VBox>
+
+            <Label fx:id="lblSpecialization" style="-fx-text-fill:#1BB8A0; -fx-font-weight:700;"/>
+            <Label fx:id="lblMessage" wrapText="true" maxWidth="360"/>
+
+            <Button text="Confirm Booking" onAction="#handleBookToken"
+                    styleClass="btn-primary" prefWidth="360" prefHeight="46"/>
+
+        </VBox>
+    </HBox>
+</VBox>

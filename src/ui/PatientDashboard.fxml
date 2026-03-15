@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.PatientDashboardController"
+            prefWidth="1360" prefHeight="880"
+            styleClass="root-pane dashboard-root">
+
+    <fx:define>
+        <ToggleGroup fx:id="shiftToggle"/>
+    </fx:define>
+
+    <top>
+        <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
+            <Button fx:id="btnToggleSidebar" text="☰" onAction="#handleToggleSidebar" styleClass="top-menu"/>
+            <Label text="🩺" styleClass="brand-icon"/>
+            <VBox spacing="2">
+                <Label text="Patient Dashboard" styleClass="top-title"/>
+                <Label fx:id="lblDate" styleClass="top-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblWelcomeNav" styleClass="top-user"/>
+            <Button text="Logout" onAction="#handleLogout" styleClass="btn-logout"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox fx:id="sidebar" spacing="10" styleClass="sidebar" prefWidth="230" alignment="TOP_LEFT">
+            <Label text="Navigation" styleClass="side-title"/>
+            <Button fx:id="btnNavOverview" text="🏠  Overview" styleClass="side-btn side-btn-active" onAction="#handleNavOverview"/>
+            <Button fx:id="btnNavBook" text="📅  Create Token" styleClass="side-btn" onAction="#handleNavBook"/>
+            <Button fx:id="btnNavTokens" text="🎟️  My Tokens" styleClass="side-btn" onAction="#handleNavTokens"/>
+            <Button fx:id="btnNavReports" text="📄  Reports" styleClass="side-btn" onAction="#handleNavReports"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="⏻  Logout" onAction="#handleLogout" styleClass="side-btn side-logout"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane styleClass="content-stack">
+
+            <!-- Overview -->
+            <VBox fx:id="sectionOverview" spacing="16" styleClass="content-root">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <Label fx:id="lblWelcomeTitle" text="Welcome" styleClass="content-title"/>
+                <Label fx:id="lblSubtitle" text="Stay updated with your appointments and reports." styleClass="content-meta"/>
+
+                <HBox spacing="14">
+                    <StackPane styleClass="stat-card accent-blue" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6">
+                            <Label text="Upcoming tokens" styleClass="card-title"/>
+                            <Label fx:id="lblUpcomingCount" text="0" styleClass="stat-value"/>
+                        </VBox>
+                    </StackPane>
+                    <StackPane styleClass="stat-card accent-teal" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6">
+                            <Label text="Completed visits" styleClass="card-title"/>
+                            <Label fx:id="lblCompletedCount" text="0" styleClass="stat-value"/>
+                        </VBox>
+                    </StackPane>
+                    <StackPane styleClass="stat-card accent-gold" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6">
+                            <Label text="Reports available" styleClass="card-title"/>
+                            <Label fx:id="lblReportCount" text="0" styleClass="stat-value"/>
+                        </VBox>
+                    </StackPane>
+                </HBox>
+
+                <VBox spacing="10">
+                    <Label text="Next appointment" styleClass="content-title"/>
+                    <Label fx:id="lblNextAppointment" styleClass="content-meta"/>
+                </VBox>
+            </VBox>
+
+            <!-- Create Token -->
+            <VBox fx:id="sectionBook" spacing="14" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <Label text="Create a Token" styleClass="content-title"/>
+                <Label text="Review your details, pick a problem type, choose a shift, then generate a pending token." styleClass="content-meta"/>
+
+                <GridPane hgap="12" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints prefHeight="32"/>
+                        <RowConstraints prefHeight="32"/>
+                        <RowConstraints prefHeight="70"/>
+                        <RowConstraints prefHeight="70"/>
+                    </rowConstraints>
+
+                    <Label text="Name" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                    <TextField fx:id="tfPatientName" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Age" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="field-label"/>
+                    <TextField fx:id="tfPatientAge" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+                    <Label text="Gender" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                    <TextField fx:id="tfPatientGender" editable="false" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Problem Type" GridPane.rowIndex="1" GridPane.columnIndex="2" styleClass="field-label"/>
+                    <ComboBox fx:id="cbProblemType" editable="true" promptText="Select or search" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+                    <Label text="Additional Notes (optional)" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                    <TextArea fx:id="taProblem" prefHeight="60" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+
+                    <Label text="Preferred Shift" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+                    <VBox spacing="6" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                        <HBox spacing="10">
+                            <RadioButton fx:id="rbMorning" text="Morning" toggleGroup="$shiftToggle"/>
+                            <RadioButton fx:id="rbDay" text="Day" toggleGroup="$shiftToggle"/>
+                            <RadioButton fx:id="rbEvening" text="Evening" toggleGroup="$shiftToggle"/>
+                        </HBox>
+                        <HBox spacing="20">
+                            <Label fx:id="lblCrowdLevel" styleClass="content-meta"/>
+                            <Label fx:id="lblBestTime" styleClass="content-meta"/>
+                        </HBox>
+                    </VBox>
+                </GridPane>
+
+                <HBox spacing="10">
+                    <Button text="Cancel" styleClass="btn-ghost" onAction="#handleResetForm"/>
+                    <Button text="Generate Token" styleClass="btn-primary" onAction="#handleCreateToken"/>
+                    <Label fx:id="lblBookMessage" styleClass="content-meta"/>
+                </HBox>
+            </VBox>
+
+            <!-- Tokens -->
+            <VBox fx:id="sectionTokens" spacing="12" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="My Tokens" styleClass="content-title"/>
+                </HBox>
+                <ScrollPane fitToWidth="true" prefHeight="560" hbarPolicy="NEVER">
+                    <content>
+                        <VBox fx:id="tokenCardContainer" spacing="12" prefWidth="1000"/>
+                    </content>
+                </ScrollPane>
+                <HBox spacing="10">
+                    <Button text="↻ Refresh" styleClass="btn-ghost" onAction="#refreshTokens"/>
+                    <Label fx:id="lblTokenMessage" styleClass="content-meta"/>
+                </HBox>
+            </VBox>
+
+            <!-- Reports -->
+            <VBox fx:id="sectionReports" spacing="16" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="My Reports" styleClass="content-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="lblReportCountHeader" text="0 reports" styleClass="content-meta"/>
+                </HBox>
+                <ScrollPane fitToWidth="true" prefHeight="560" hbarPolicy="NEVER" styleClass="report-scroll">
+                    <content>
+                        <VBox fx:id="reportCardContainer" spacing="16" prefWidth="1000" styleClass="report-container"/>
+                    </content>
+                </ScrollPane>
+                <Label fx:id="lblReportMessage" styleClass="content-meta"/>
+            </VBox>
+
+        </StackPane>
+    </center>
+
+</BorderPane>

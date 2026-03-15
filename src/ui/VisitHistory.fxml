@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.VisitHistoryController"
+      prefWidth="1050" prefHeight="680"
+      styleClass="root-pane" spacing="0">
+
+    <!-- Navbar -->
+    <HBox styleClass="navbar" prefHeight="62" alignment="CENTER_LEFT" spacing="12">
+        <Label text="SHMS" styleClass="nav-brand"/>
+        <Label text="/ Visit History" style="-fx-text-fill:#3E5A70; -fx-font-size:14px;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="← Back" onAction="#goBack" styleClass="btn-logout">
+            <HBox.margin><Insets right="20"/></HBox.margin>
+        </Button>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="20">
+        <VBox.margin><Insets top="30" left="40" right="40" bottom="24"/></VBox.margin>
+
+        <Label text="Medical Visit History"
+               style="-fx-font-size:22px; -fx-font-weight:700; -fx-text-fill:#0D1B2A;"/>
+        <Label fx:id="lblMessage" wrapText="true"/>
+
+        <!-- Report table -->
+        <TableView fx:id="tableHistory" prefHeight="280"
+                   style="-fx-background-color:white; -fx-border-color:#D8DCE8;
+                          -fx-border-radius:10; -fx-background-radius:10;">
+            <columns>
+                <TableColumn fx:id="colDate"        text="Date"        prefWidth="160"/>
+                <TableColumn fx:id="colDoctor"      text="Doctor"      prefWidth="160"/>
+                <TableColumn fx:id="colProblem"     text="Problem"     prefWidth="200"/>
+                <TableColumn fx:id="colSolution"    text="Diagnosis"   prefWidth="200"/>
+                <TableColumn fx:id="colNotes"       text="Doctor Notes" prefWidth="200"/>
+                <TableColumn fx:id="colMedications" text="Medications" prefWidth="200"/>
+            </columns>
+            <placeholder>
+                <Label text="No medical reports yet. They appear here after completed consultations."
+                       style="-fx-text-fill:#7A8CA0;"/>
+            </placeholder>
+        </TableView>
+
+        <!-- Detail panel -->
+        <VBox spacing="10"
+              style="-fx-background-color:white; -fx-border-color:#D8DCE8;
+                     -fx-border-width:1.5; -fx-border-radius:12;
+                     -fx-background-radius:12; -fx-padding:20 24;">
+            <Label text="Report Details"
+                   style="-fx-font-size:14px; -fx-font-weight:700; -fx-text-fill:#0D1B2A;"/>
+            <HBox spacing="40">
+                <VBox spacing="4">
+                    <Label text="Doctor" styleClass="field-label"/>
+                    <Label fx:id="lblDetailDoctor" style="-fx-text-fill:#0D1B2A; -fx-font-size:13px;"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Date" styleClass="field-label"/>
+                    <Label fx:id="lblDetailDate" style="-fx-text-fill:#0D1B2A; -fx-font-size:13px;"/>
+                </VBox>
+            </HBox>
+            <VBox spacing="4">
+                <Label text="Problem" styleClass="field-label"/>
+                <Label fx:id="lblDetailProblem" style="-fx-text-fill:#3D4F63; -fx-font-size:13px;" wrapText="true"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="Diagnosis / Solution" styleClass="field-label"/>
+                <Label fx:id="lblDetailSolution" style="-fx-text-fill:#3D4F63; -fx-font-size:13px;" wrapText="true"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="Medications / Prescription" styleClass="field-label"/>
+                <Label fx:id="lblDetailMeds" style="-fx-text-fill:#3D4F63; -fx-font-size:13px;" wrapText="true"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="Doctor Notes" styleClass="field-label"/>
+                <Label fx:id="lblDetailNotes" style="-fx-text-fill:#3D4F63; -fx-font-size:13px;" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </VBox>
+</VBox>

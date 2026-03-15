@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.MyTokensController"
+      prefWidth="1000" prefHeight="660"
+      styleClass="root-pane" spacing="0">
+
+    <!-- Navbar -->
+    <HBox styleClass="navbar" prefHeight="62" alignment="CENTER_LEFT" spacing="12">
+        <Label text="SHMS" styleClass="nav-brand"/>
+        <Label text="/ My Tokens" style="-fx-text-fill:#3E5A70; -fx-font-size:14px;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="← Back" onAction="#goBack" styleClass="btn-logout">
+            <HBox.margin><Insets right="20"/></HBox.margin>
+        </Button>
+    </HBox>
+
+    <!-- Body -->
+    <VBox VBox.vgrow="ALWAYS" spacing="20">
+        <VBox.margin><Insets top="36" left="40" right="40" bottom="30"/></VBox.margin>
+
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="My Appointment Tokens"
+                   style="-fx-font-size:22px; -fx-font-weight:700; -fx-text-fill:#0D1B2A;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <Label fx:id="lblMessage" wrapText="true"/>
+
+        <TableView fx:id="tableTokens" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color:white; -fx-border-color:#D8DCE8;
+                          -fx-border-radius:10; -fx-background-radius:10;">
+            <columns>
+                <TableColumn fx:id="colNumber"          text="Token ID"      prefWidth="80"/>
+                <TableColumn fx:id="colSpecialization"  text="Department"    prefWidth="130"/>
+                <TableColumn fx:id="colProblem"         text="Problem"        prefWidth="230"/>
+                <TableColumn fx:id="colDoctor"          text="Doctor"         prefWidth="160"/>
+                <TableColumn fx:id="colStatus"          text="Status"         prefWidth="110"/>
+                <TableColumn fx:id="colCreatedAt"       text="Date"           prefWidth="140"/>
+            </columns>
+            <placeholder>
+                <Label text="No appointments yet. Book one from the dashboard."
+                       style="-fx-text-fill:#7A8CA0;"/>
+            </placeholder>
+        </TableView>
+
+    </VBox>
+</VBox>

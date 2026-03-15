@@ -1,0 +1,33 @@
+# Compiled output
+*.class
+*.jar
+bin/
+out/
+build/
+target/
+
+# IDE / editor config
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# Java tooling
+.gradle/
+.mvn/
+mvnw
+mvnw.cmd
+
+# OS/system files
+ehthumbs.db
+Desktop.ini

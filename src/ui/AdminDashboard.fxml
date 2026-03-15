@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.AdminDashboardController"
+            prefWidth="1440" prefHeight="900"
+            styleClass="root-pane dashboard-root">
+
+    <top>
+        <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
+            <Button fx:id="btnToggleSidebar" text="☰" onAction="#handleToggleSidebar" styleClass="top-menu"/>
+            <Label text="🏛️" styleClass="brand-icon"/>
+            <VBox spacing="2">
+                <Label text="Admin Dashboard" styleClass="top-title"/>
+                <Label fx:id="lblDate" styleClass="top-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblWelcome" styleClass="top-user"/>
+            <Button text="Logout" onAction="#handleLogout" styleClass="btn-logout"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox fx:id="sidebar" spacing="10" styleClass="sidebar" prefWidth="230" alignment="TOP_LEFT">
+            <Label text="Navigation" styleClass="side-title"/>
+            <Button fx:id="btnNavOverview" text="🏠  Overview" styleClass="side-btn side-btn-active" onAction="#handleNavOverview"/>
+            <Button fx:id="btnNavPatients" text="👥  Patients" styleClass="side-btn" onAction="#handleNavPatients"/>
+            <Button fx:id="btnNavDoctors" text="🧑‍⚕️  Doctors" styleClass="side-btn" onAction="#handleNavDoctors"/>
+            <Button fx:id="btnNavAnalytics" text="📊  Analytics" styleClass="side-btn" onAction="#handleNavAnalytics"/>
+            <Region VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane styleClass="content-stack">
+
+            <!-- Overview -->
+            <VBox fx:id="sectionOverview" spacing="16" styleClass="content-root">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <HBox spacing="14">
+                    <StackPane styleClass="stat-card accent-blue" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6">
+                            <Label text="Patients" styleClass="card-title"/>
+                            <Label fx:id="lblPatientCount" text="0" styleClass="stat-value"/>
+                        </VBox>
+                    </StackPane>
+                    <StackPane styleClass="stat-card accent-teal" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6">
+                            <Label text="Doctors" styleClass="card-title"/>
+                            <Label fx:id="lblDoctorCount" text="0" styleClass="stat-value"/>
+                        </VBox>
+                    </StackPane>
+                    <StackPane styleClass="stat-card accent-gold" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6">
+                            <Label text="Active Tokens" styleClass="card-title"/>
+                            <Label fx:id="lblTokenCount" text="0" styleClass="stat-value"/>
+                        </VBox>
+                    </StackPane>
+                </HBox>
+
+                <Label text="Latest Tokens" styleClass="content-title"/>
+                <TableView fx:id="tableTokens" prefHeight="520" styleClass="tokens-table">
+                    <columns>
+                        <TableColumn fx:id="colTokenNumber" text="Token ID" prefWidth="80"/>
+                        <TableColumn fx:id="colTokenPatient" text="Patient" prefWidth="160"/>
+                        <TableColumn fx:id="colTokenSpec" text="Specialization" prefWidth="160"/>
+                        <TableColumn fx:id="colTokenDoctor" text="Doctor" prefWidth="160"/>
+                        <TableColumn fx:id="colTokenStatus" text="Status" prefWidth="120"/>
+                        <TableColumn fx:id="colTokenCreated" text="Created" prefWidth="180"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- Patients -->
+            <VBox fx:id="sectionPatients" spacing="12" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Patients" styleClass="content-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="↻ Refresh" styleClass="btn-ghost" onAction="#loadPatients"/>
+                </HBox>
+                <TableView fx:id="tablePatients" prefHeight="560">
+                    <columns>
+                        <TableColumn fx:id="colPatientId" text="ID" prefWidth="80"/>
+                        <TableColumn fx:id="colPatientName" text="Name" prefWidth="200"/>
+                        <TableColumn fx:id="colPatientEmail" text="Email" prefWidth="240"/>
+                        <TableColumn fx:id="colPatientPhone" text="Contact" prefWidth="160"/>
+                        <TableColumn fx:id="colPatientGender" text="Gender" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- Doctors -->
+            <VBox fx:id="sectionDoctors" spacing="14" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Doctors" styleClass="content-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="↻ Refresh" styleClass="btn-ghost" onAction="#loadDoctors"/>
+                </HBox>
+                <HBox spacing="16" alignment="TOP_LEFT">
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <Label text="Existing Doctors" styleClass="section-heading"/>
+                        <StackPane styleClass="dash-card">
+                            <TableView fx:id="tableDoctors" prefHeight="420">
+                                <columns>
+                                    <TableColumn fx:id="colDoctorId" text="ID" prefWidth="80"/>
+                                    <TableColumn fx:id="colDoctorName" text="Name" prefWidth="180"/>
+                                    <TableColumn fx:id="colSpecialization" text="Specialization" prefWidth="180"/>
+                                    <TableColumn fx:id="colShifts" text="Shift" prefWidth="100"/>
+                                    <TableColumn fx:id="colDepartment" text="Department" prefWidth="140"/>
+                                    <TableColumn fx:id="colEmail" text="Email" prefWidth="200"/>
+                                </columns>
+                            </TableView>
+                        </StackPane>
+                    </VBox>
+
+                    <VBox spacing="12" prefWidth="340" styleClass="dash-card form-card">
+                        <Label text="Add / Edit Doctor" styleClass="section-heading"/>
+                        <VBox spacing="8">
+                            <Label text="Name" styleClass="field-label"/>
+                            <TextField fx:id="tfDoctorName" promptText="Dr. John Doe" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Specialization" styleClass="field-label"/>
+                            <TextField fx:id="tfSpecialization" promptText="Cardiologist" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Shift" styleClass="field-label"/>
+                            <ComboBox fx:id="cbShift" promptText="Select shift" styleClass="field-combo"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Department" styleClass="field-label"/>
+                            <TextField fx:id="tfDepartment" promptText="Department name or ID" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Email" styleClass="field-label"/>
+                            <TextField fx:id="tfEmail" promptText="doctor@email.com" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Password" styleClass="field-label"/>
+                            <PasswordField fx:id="pfPassword" promptText="Set password" styleClass="field-input"/>
+                        </VBox>
+                        <HBox spacing="10">
+                            <Button text="Create Doctor" styleClass="btn-primary" onAction="#handleAddDoctor" HBox.hgrow="ALWAYS"/>
+                            <Button text="Update" styleClass="btn-ghost" onAction="#handleUpdateDoctor"/>
+                            <Button text="Remove" styleClass="btn-ghost danger" onAction="#handleRemoveDoctor"/>
+                        </HBox>
+                        <Label fx:id="lblDoctorMsg" styleClass="content-meta"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Analytics -->
+            <VBox fx:id="sectionAnalytics" spacing="16" styleClass="content-root" visible="false" managed="false">
+                <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
+                <Label text="System Analytics" styleClass="content-title"/>
+                <BarChart fx:id="barBookingsBySpec" prefHeight="240">
+                    <xAxis><CategoryAxis label="Specialization"/></xAxis>
+                    <yAxis><NumberAxis label="Tokens"/></yAxis>
+                </BarChart>
+                <Label text="Revenue by Department" styleClass="section-heading"/>
+                <BarChart fx:id="barRevenueByDept" prefHeight="320">
+                    <xAxis><CategoryAxis label="Department"/></xAxis>
+                    <yAxis><NumberAxis label="Revenue (Rs)"/></yAxis>
+                </BarChart>
+            </VBox>
+
+        </StackPane>
+    </center>
+
+</BorderPane>
+
