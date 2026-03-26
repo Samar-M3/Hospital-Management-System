@@ -172,21 +172,54 @@ public class DoctorDAO {
         return list;
     }
 
-    /** Helper: maps a ResultSet row to a Doctor object. */
-    private Doctor mapRow(ResultSet rs) throws SQLException {
+    /**
+     * Helper: maps a ResultSet row to a Doctor object. The mapping is tolerant
+     * of column-name differences (camelCase vs snake_case) so one bad column
+     * no longer causes the entire list to stop rendering in the UI.
+     */
+    private Doctor mapRow(ResultSet rs) {
         Doctor d = new Doctor();
-        d.setDoctorId      (rs.getInt   ("doctorId"));
-        d.setName          (rs.getString("name"));
-        d.setSpecialization(rs.getString("specialization"));
-        d.setShifts        (rs.getString("shifts"));
-        d.setDepartmentId  (rs.getInt   ("departmentId"));
 
-        try { d.setEmail(rs.getString("email")); } catch (SQLException ignored) {}
-        try { d.setDepartmentName(rs.getString("departmentName")); } catch (SQLException ignored) {}
-        if ((d.getDepartmentName() == null || d.getDepartmentName().isBlank()) && d.getDepartmentId() != 0) {
-            d.setDepartmentName(String.valueOf(d.getDepartmentId()));
+        d.setDoctorId(safeInt(rs, "doctorId", "doctor_id"));
+        d.setName(safeString(rs, "name", "doctor_name"));
+        d.setSpecialization(safeString(rs, "specialization", "speciality"));
+        d.setShifts(safeString(rs, "shifts", "shift"));
+
+        int deptId = safeInt(rs, "departmentId", "department_id");
+        d.setDepartmentId(deptId);
+        d.setEmail(safeString(rs, "email"));
+
+        String deptName = safeString(rs,
+                "departmentName", "department", "department_name", "department_display");
+        if ((deptName == null || deptName.isBlank()) && deptId != 0) {
+            deptName = String.valueOf(deptId);
         }
+        if (deptName == null || deptName.isBlank()) {
+            deptName = d.getSpecialization(); // last-resort fallback to avoid empty cells
+        }
+        d.setDepartmentName(deptName);
+
         return d;
+    }
+
+    private int safeInt(ResultSet rs, String... columns) {
+        for (String col : columns) {
+            try {
+                int val = rs.getInt(col);
+                if (!rs.wasNull() || val != 0) return val;
+            } catch (SQLException ignored) { /* try next */ }
+        }
+        return 0;
+    }
+
+    private String safeString(ResultSet rs, String... columns) {
+        for (String col : columns) {
+            try {
+                String val = rs.getString(col);
+                if (val != null) return val;
+            } catch (SQLException ignored) { /* try next */ }
+        }
+        return null;
     }
 }
 

@@ -3,6 +3,7 @@ package util;
 import model.Admin;
 import model.Doctor;
 import model.Patient;
+import model.User;
 
 /**
  * Tracks the current logged-in user (patient, doctor, or admin).
@@ -14,6 +15,7 @@ public class SessionManager {
 
     private static SessionManager instance;
 
+    private User    currentUser;
     private Patient currentPatient;
     private Doctor  currentDoctor;
     private Admin   currentAdmin;
@@ -26,26 +28,21 @@ public class SessionManager {
         return instance;
     }
 
-    public void loginAsPatient(Patient p) {
+    /** Primary login entry point (polymorphic). */
+    public void login(User user, Role role) {
         clearSession();
-        currentPatient = p;
-        currentRole    = Role.PATIENT;
-        System.out.println("[Session] Patient logged in: " + p.getName());
+        this.currentUser = user;
+        this.currentRole = role;
+        if (user instanceof Patient p) currentPatient = p;
+        if (user instanceof Doctor d)  currentDoctor  = d;
+        if (user instanceof Admin a)   currentAdmin   = a;
+        System.out.println("[Session] Logged in as " + role + ": " + (user != null ? user.getName() : "unknown"));
     }
 
-    public void loginAsDoctor(Doctor d) {
-        clearSession();
-        currentDoctor = d;
-        currentRole   = Role.DOCTOR;
-        System.out.println("[Session] Doctor logged in: " + d.getName());
-    }
-
-    public void loginAsAdmin(Admin a) {
-        clearSession();
-        currentAdmin = a;
-        currentRole  = Role.ADMIN;
-        System.out.println("[Session] Admin logged in: " + a.getName());
-    }
+    // Backward-compatible role-specific helpers
+    public void loginAsPatient(Patient p) { login(p, Role.PATIENT); }
+    public void loginAsDoctor(Doctor d)   { login(d, Role.DOCTOR); }
+    public void loginAsAdmin(Admin a)     { login(a, Role.ADMIN); }
 
     public void logout() {
         clearSession();
@@ -53,12 +50,14 @@ public class SessionManager {
     }
 
     private void clearSession() {
+        currentUser    = null;
         currentPatient = null;
         currentDoctor  = null;
         currentAdmin   = null;
         currentRole    = null;
     }
 
+    public User getCurrentUser()  { return currentUser; }
     public Patient getCurrentPatient() { return currentPatient; }
     public Doctor  getCurrentDoctor()  { return currentDoctor; }
     public Admin   getCurrentAdmin()   { return currentAdmin; }

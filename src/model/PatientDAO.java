@@ -80,15 +80,86 @@ public class PatientDAO {
         return list;
     }
 
-    /** Maps a ResultSet row to a Patient object. */
-    private Patient mapRow(ResultSet rs) throws SQLException {
+    /**
+     * Updates patient core details (name, age, gender, contact, email).
+     */
+    public boolean updatePatient(Patient p) {
+        String sql = "UPDATE Patient SET name=?, age=?, gender=?, contact=?, email=? WHERE patient_id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getName());
+            ps.setInt   (2, p.getAge());
+            ps.setString(3, p.getGender());
+            ps.setString(4, p.getContact());
+            ps.setString(5, p.getEmail());
+            ps.setInt   (6, p.getPatientId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            // Fallback for camelCase column names
+            String sqlCamel = "UPDATE Patient SET name=?, age=?, gender=?, contact=?, email=? WHERE patientId=?";
+            try (PreparedStatement ps = conn.prepareStatement(sqlCamel)) {
+                ps.setString(1, p.getName());
+                ps.setInt   (2, p.getAge());
+                ps.setString(3, p.getGender());
+                ps.setString(4, p.getContact());
+                ps.setString(5, p.getEmail());
+                ps.setInt   (6, p.getPatientId());
+                return ps.executeUpdate() > 0;
+            } catch (SQLException ex) {
+                System.err.println("[PatientDAO] updatePatient error: " + ex.getMessage());
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Deletes a patient by id.
+     */
+    public boolean removePatient(int patientId) {
+        String sql = "DELETE FROM Patient WHERE patient_id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, patientId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            String sqlCamel = "DELETE FROM Patient WHERE patientId=?";
+            try (PreparedStatement ps = conn.prepareStatement(sqlCamel)) {
+                ps.setInt(1, patientId);
+                return ps.executeUpdate() > 0;
+            } catch (SQLException ex) {
+                System.err.println("[PatientDAO] removePatient error: " + ex.getMessage());
+                return false;
+            }
+        }
+    }
+
+    /** Maps a ResultSet row to a Patient object, tolerant of snake/camel columns. */
+    private Patient mapRow(ResultSet rs) {
         Patient p = new Patient();
-        p.setPatientId(rs.getInt   ("patient_id"));
-        p.setName     (rs.getString("name"));
-        p.setAge      (rs.getInt   ("age"));
-        p.setGender   (rs.getString("gender"));
-        p.setContact  (rs.getString("contact"));
-        p.setEmail    (rs.getString("email"));
+        p.setPatientId(safeInt(rs, "patient_id", "patientId"));
+        p.setName(safeString(rs, "name", "patient_name"));
+        p.setAge(safeInt(rs, "age"));
+        p.setGender(safeString(rs, "gender"));
+        p.setContact(safeString(rs, "contact", "phone", "phone_number"));
+        p.setEmail(safeString(rs, "email"));
         return p;
+    }
+
+    private int safeInt(ResultSet rs, String... columns) {
+        for (String col : columns) {
+            try {
+                int val = rs.getInt(col);
+                if (!rs.wasNull() || val != 0) return val;
+            } catch (SQLException ignored) { /* try next */ }
+        }
+        return 0;
+    }
+
+    private String safeString(ResultSet rs, String... columns) {
+        for (String col : columns) {
+            try {
+                String val = rs.getString(col);
+                if (val != null) return val;
+            } catch (SQLException ignored) { /* try next */ }
+        }
+        return null;
     }
 }

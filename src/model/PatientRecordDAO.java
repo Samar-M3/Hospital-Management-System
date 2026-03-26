@@ -78,28 +78,46 @@ public class PatientRecordDAO {
     public List<PatientRecord> getReportsByPatient(int patientId) { return getPatientRecordsByPatient(patientId); }
 
     /** Helper: maps a ResultSet row to a PatientRecord object. */
-    private PatientRecord mapRow(ResultSet rs) throws SQLException {
+    private PatientRecord mapRow(ResultSet rs) {
         PatientRecord r = new PatientRecord();
-        r.setReportId   (rs.getInt   ("report_id"));
-        String diagnosis    = null;
-        String prescription = null;
-        try { diagnosis    = rs.getString("diagnosis"); }    catch (SQLException ignored) {}
-        try { prescription = rs.getString("prescription"); } catch (SQLException ignored) {}
-        r.setProblem    (diagnosis);
-        r.setSolution   (prescription);   // reuse column for UI "solution"
-        r.setMedications(prescription);   // show prescribed medicines
-        try { r.setNotes(rs.getString("notes")); } catch (SQLException ignored) {}
-        try {
-            int tid = rs.getInt("token_id");
-            r.setTokenId(rs.wasNull() ? null : tid);
-        } catch (SQLException ignored) {}
-        r.setPatientId  (rs.getInt   ("patient_id"));
-        try { r.setDoctorId(rs.getInt("doctorId")); }
-        catch (SQLException e) { r.setDoctorId(rs.getInt("doctor_id")); }
+        r.setReportId(safeInt(rs, "report_id", "reportId", "record_id"));
 
-        Timestamp ts = rs.getTimestamp("created_at");
+        String diagnosis    = safeString(rs, "diagnosis", "problem");
+        String prescription = safeString(rs, "prescription", "medications", "medicine");
+        r.setProblem(diagnosis);
+        r.setSolution(prescription);   // reuse column for UI "solution"
+        r.setMedications(prescription);   // show prescribed medicines
+        r.setNotes(safeString(rs, "notes", "remarks"));
+
+        int tid = safeInt(rs, "token_id", "tokenId");
+        r.setTokenId(tid == 0 ? null : tid);
+        r.setPatientId(safeInt(rs, "patient_id", "patientId"));
+        r.setDoctorId(safeInt(rs, "doctorId", "doctor_id"));
+
+        Timestamp ts = null;
+        try { ts = rs.getTimestamp("created_at"); } catch (SQLException ignored) {}
         if (ts != null) r.setCreatedAt(ts.toLocalDateTime());
 
         return r;
+    }
+
+    private int safeInt(ResultSet rs, String... columns) {
+        for (String col : columns) {
+            try {
+                int val = rs.getInt(col);
+                if (!rs.wasNull() || val != 0) return val;
+            } catch (SQLException ignored) { /* try next */ }
+        }
+        return 0;
+    }
+
+    private String safeString(ResultSet rs, String... columns) {
+        for (String col : columns) {
+            try {
+                String val = rs.getString(col);
+                if (val != null) return val;
+            } catch (SQLException ignored) { /* try next */ }
+        }
+        return null;
     }
 }

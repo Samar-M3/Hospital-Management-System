@@ -1,11 +1,8 @@
 package controller;
 
-import model.Admin;
-import model.AdminDAO;
-import model.Doctor;
-import model.DoctorDAO;
-import model.Patient;
-import model.PatientDAO;
+import service.AuthenticationService;
+import service.DatabaseAuthenticationService;
+import service.dto.AuthResult;
 import util.SceneManager;
 import util.SessionManager;
 
@@ -28,9 +25,8 @@ public class LoginController implements Initializable {
     @FXML private PasswordField pfPassword;
     @FXML private Label         lblError;
 
-    private final PatientDAO patientDAO = new PatientDAO();
-    private final DoctorDAO  doctorDAO  = new DoctorDAO();
-    private final AdminDAO   adminDAO   = new AdminDAO();
+    // Depend on abstraction for authentication (better testability & swapping)
+    private final AuthenticationService authService = new DatabaseAuthenticationService();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -48,31 +44,19 @@ public class LoginController implements Initializable {
             return;
         }
 
-        // Patient
-        Patient patient = patientDAO.login(email, password);
-        if (patient != null) {
-            SessionManager.getInstance().loginAsPatient(patient);
-            SceneManager.switchScene("PatientDashboard.fxml", "Patient Dashboard");
+        AuthResult result = authService.authenticate(email, password);
+        if (!result.isSuccess()) {
+            showError("Invalid credentials. Please try again.");
             return;
         }
 
-        // Doctor
-        Doctor doctor = doctorDAO.login(email, password);
-        if (doctor != null) {
-            SessionManager.getInstance().loginAsDoctor(doctor);
-            SceneManager.switchScene("DoctorDashboard.fxml", "Doctor Dashboard");
-            return;
+        SessionManager.getInstance().login(result.getUser(), result.getRole());
+        switch (result.getRole()) {
+            case PATIENT -> SceneManager.switchScene("PatientDashboard.fxml", "Patient Dashboard");
+            case DOCTOR  -> SceneManager.switchScene("DoctorDashboard.fxml", "Doctor Dashboard");
+            case ADMIN   -> SceneManager.switchScene("AdminDashboard.fxml", "Admin Dashboard");
+            default      -> showError("Unknown role. Please contact support.");
         }
-
-        // Admin
-        Admin admin = adminDAO.login(email, password);
-        if (admin != null) {
-            SessionManager.getInstance().loginAsAdmin(admin);
-            SceneManager.switchScene("AdminDashboard.fxml", "Admin Dashboard");
-            return;
-        }
-
-        showError("Invalid credentials. Please try again.");
     }
 
     @FXML

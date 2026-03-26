@@ -337,7 +337,7 @@ public class DoctorDashboardController implements Initializable {
     }
 
     private String resolvePatientName(int id) {
-        Patient p = patientService.findById(id);
+        Patient p = polymorphicPatientService.findById(id);
         return p != null ? p.getName() : "Patient #" + id;
     }
     private int currentDoctorId() {
@@ -375,7 +375,7 @@ public class DoctorDashboardController implements Initializable {
         }
         Patient updated = showPatientDialog(selected);
         if (updated != null) {
-            patientService.update(updated);
+            polymorphicPatientService.update(updated);
             refreshPatients();
             refreshStatsAndCharts();
         }
@@ -393,7 +393,7 @@ public class DoctorDashboardController implements Initializable {
         confirm.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            patientService.delete(selected.getPatientId());
+            polymorphicPatientService.delete(selected.getPatientId());
             refreshPatients();
             refreshStatsAndCharts();
         }

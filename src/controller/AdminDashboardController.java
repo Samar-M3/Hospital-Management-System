@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class AdminDashboardController implements Initializable {
 
@@ -58,6 +57,12 @@ public class AdminDashboardController implements Initializable {
     @FXML private TableColumn<Patient,String>  colPatientEmail;
     @FXML private TableColumn<Patient,String>  colPatientPhone;
     @FXML private TableColumn<Patient,String>  colPatientGender;
+    @FXML private TextField tfPatientName;
+    @FXML private TextField tfPatientEmail;
+    @FXML private TextField tfPatientPhone;
+    @FXML private TextField tfPatientAge;
+    @FXML private ComboBox<String> cbPatientGender;
+    @FXML private Label lblPatientMsg;
 
     // Doctors
     @FXML private TableView<Doctor> tableDoctors;
@@ -76,13 +81,13 @@ public class AdminDashboardController implements Initializable {
     @FXML private Label lblDoctorMsg;
 
     // Analytics
-    @FXML private BarChart<String, Number> barBookingsBySpec;
     @FXML private BarChart<String, Number> barRevenueByDept;
 
     private final DoctorDAO doctorDAO = new DoctorDAO();
     private final PatientDAO patientDAO = new PatientDAO();
     private final TokenDAO tokenDAO = new TokenDAO();
     private final ObservableList<Doctor> doctorList = FXCollections.observableArrayList();
+    private Patient selectedPatient;
     private Doctor selectedDoctor;
     private boolean sidebarCollapsed = false;
 
@@ -137,6 +142,20 @@ public class AdminDashboardController implements Initializable {
         colPatientEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colPatientPhone.setCellValueFactory(new PropertyValueFactory<>("contact"));
         colPatientGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        if (cbPatientGender != null) {
+            cbPatientGender.setItems(FXCollections.observableArrayList("Male", "Female", "Other"));
+        }
+
+        tablePatients.getSelectionModel().selectedItemProperty().addListener((obs, o, p) -> {
+            selectedPatient = p;
+            if (p != null) {
+                tfPatientName.setText(p.getName());
+                tfPatientEmail.setText(p.getEmail());
+                tfPatientPhone.setText(p.getContact());
+                tfPatientAge.setText(String.valueOf(p.getAge()));
+                cbPatientGender.setValue(p.getGender());
+            }
+        });
 
         colDoctorId.setCellValueFactory(new PropertyValueFactory<>("doctorId"));
         colDoctorName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -162,7 +181,9 @@ public class AdminDashboardController implements Initializable {
     // Data loading
     @FXML private void loadPatients() {
         tablePatients.setItems(FXCollections.observableArrayList(patientDAO.getAllPatients()));
+        tablePatients.getSelectionModel().clearSelection();
         applySort(tablePatients, colPatientId);
+        clearPatientForm();
         refreshCounts();
     }
     @FXML private void loadDoctors() {
@@ -176,6 +197,70 @@ public class AdminDashboardController implements Initializable {
         refreshCounts();
     }
 
+    @FXML
+    private void handleUpdatePatient() {
+        Patient p = selectedPatient;
+        if (p == null) { showPatientMsg("Select a patient to update.", false); return; }
+        Patient updated = buildPatientFromForm(p.getPatientId());
+        if (updated == null) return;
+        boolean ok = patientDAO.updatePatient(updated);
+        if (ok) {
+            loadPatients();
+            showPatientMsg("Patient updated.", true);
+        } else {
+            showPatientMsg("Update failed.", false);
+        }
+    }
+
+    @FXML
+    private void handleRemovePatient() {
+        Patient p = selectedPatient;
+        if (p == null) { showPatientMsg("Select a patient to remove.", false); return; }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Remove " + p.getName() + "?", ButtonType.OK, ButtonType.CANCEL);
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.OK) {
+                boolean ok = patientDAO.removePatient(p.getPatientId());
+                if (ok) {
+                    loadPatients();
+                    showPatientMsg("Patient removed.", true);
+                } else {
+                    showPatientMsg("Removal failed.", false);
+                }
+            }
+        });
+    }
+
+    private Patient buildPatientFromForm(int id) {
+        String name  = tfPatientName.getText().trim();
+        String email = tfPatientEmail.getText().trim();
+        String phone = tfPatientPhone.getText().trim();
+        String gender= cbPatientGender.getValue();
+        int age      = parseDeptId(tfPatientAge.getText()); // reuse safe int parser
+
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || gender == null) {
+            showPatientMsg("Fill all patient fields.", false);
+            return null;
+        }
+        Patient p = new Patient();
+        p.setPatientId(id);
+        p.setName(name);
+        p.setEmail(email);
+        p.setContact(phone);
+        p.setGender(gender);
+        p.setAge(age);
+        return p;
+    }
+
+    private void clearPatientForm() {
+        selectedPatient = null;
+        if (tfPatientName != null) tfPatientName.clear();
+        if (tfPatientEmail != null) tfPatientEmail.clear();
+        if (tfPatientPhone != null) tfPatientPhone.clear();
+        if (tfPatientAge != null) tfPatientAge.clear();
+        if (cbPatientGender != null) cbPatientGender.setValue(null);
+    }
+
     private void refreshCounts() {
         lblPatientCount.setText(String.valueOf(tablePatients.getItems().size()));
         lblDoctorCount.setText(String.valueOf(tableDoctors.getItems().size()));
@@ -184,15 +269,6 @@ public class AdminDashboardController implements Initializable {
 
     private void loadAnalytics() {
         List<Token> tokens = tokenDAO.getAllTokens();
-
-        // Bar: bookings per specialization
-        barBookingsBySpec.getData().clear();
-        var series = new XYChart.Series<String, Number>();
-        tokens.stream()
-                .collect(Collectors.groupingBy(Token::getSpecialization, Collectors.counting()))
-                .forEach((spec, count) -> series.getData().add(new XYChart.Data<>(spec, count)));
-        barBookingsBySpec.getData().add(series);
-
         loadRevenue(tokens);
     }
 
@@ -204,13 +280,18 @@ public class AdminDashboardController implements Initializable {
         tokens.stream()
                 .filter(t -> "Completed".equalsIgnoreCase(t.getStatus()))
                 .forEach(t -> {
-                    String dept = t.getSpecialization() != null && !t.getSpecialization().isBlank() ? t.getSpecialization() : "General";
+                    String dept = normalizeSpec(t.getSpecialization());
                     double charge = rates.getOrDefault(dept, 500);
                     revenue.merge(dept, charge, Double::sum);
                 });
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         revenue.forEach((dept, sum) -> series.getData().add(new XYChart.Data<>(dept, sum)));
         barRevenueByDept.getData().add(series);
+    }
+
+    private String normalizeSpec(String spec) {
+        if (spec == null || spec.isBlank()) return "General";
+        return spec.trim();
     }
 
     private Map<String, Integer> defaultRates() {
@@ -353,6 +434,14 @@ public class AdminDashboardController implements Initializable {
     @FXML private void handleLogout() {
         SessionManager.getInstance().logout();
         SceneManager.switchScene("Login.fxml", "Login");
+    }
+
+    private void showPatientMsg(String msg, boolean ok) {
+        if (lblPatientMsg != null) {
+            lblPatientMsg.setText(msg);
+            lblPatientMsg.getStyleClass().removeAll("error-label","success-label");
+            lblPatientMsg.getStyleClass().add(ok ? "success-label" : "error-label");
+        }
     }
 
     private void showDoctorMsg(String msg, boolean ok) {

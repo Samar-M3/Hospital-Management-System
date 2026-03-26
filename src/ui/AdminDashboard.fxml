@@ -82,15 +82,48 @@
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button text="↻ Refresh" styleClass="btn-ghost" onAction="#loadPatients"/>
                 </HBox>
-                <TableView fx:id="tablePatients" prefHeight="560">
-                    <columns>
-                        <TableColumn fx:id="colPatientId" text="ID" prefWidth="80"/>
-                        <TableColumn fx:id="colPatientName" text="Name" prefWidth="200"/>
-                        <TableColumn fx:id="colPatientEmail" text="Email" prefWidth="240"/>
-                        <TableColumn fx:id="colPatientPhone" text="Contact" prefWidth="160"/>
-                        <TableColumn fx:id="colPatientGender" text="Gender" prefWidth="100"/>
-                    </columns>
-                </TableView>
+                <HBox spacing="16" alignment="TOP_LEFT">
+                    <StackPane styleClass="dash-card" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="tablePatients" prefHeight="520">
+                            <columns>
+                                <TableColumn fx:id="colPatientId" text="ID" prefWidth="80"/>
+                                <TableColumn fx:id="colPatientName" text="Name" prefWidth="200"/>
+                                <TableColumn fx:id="colPatientEmail" text="Email" prefWidth="240"/>
+                                <TableColumn fx:id="colPatientPhone" text="Contact" prefWidth="160"/>
+                                <TableColumn fx:id="colPatientGender" text="Gender" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+                    </StackPane>
+
+                    <VBox spacing="12" prefWidth="320" styleClass="dash-card form-card">
+                        <Label text="Edit Patient" styleClass="section-heading"/>
+                        <VBox spacing="8">
+                            <Label text="Name" styleClass="field-label"/>
+                            <TextField fx:id="tfPatientName" promptText="Patient name" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Email" styleClass="field-label"/>
+                            <TextField fx:id="tfPatientEmail" promptText="email@example.com" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Contact" styleClass="field-label"/>
+                            <TextField fx:id="tfPatientPhone" promptText="+977-98XXXXXXXX" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Age" styleClass="field-label"/>
+                            <TextField fx:id="tfPatientAge" promptText="Age" styleClass="field-input"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label text="Gender" styleClass="field-label"/>
+                            <ComboBox fx:id="cbPatientGender" promptText="Select gender" styleClass="field-combo"/>
+                        </VBox>
+                        <HBox spacing="10">
+                            <Button text="Update" styleClass="btn-primary" onAction="#handleUpdatePatient" HBox.hgrow="ALWAYS"/>
+                            <Button text="Remove" styleClass="btn-action btn-action-red" onAction="#handleRemovePatient"/>
+                        </HBox>
+                        <Label fx:id="lblPatientMsg" styleClass="content-meta"/>
+                    </VBox>
+                </HBox>
             </VBox>
 
             <!-- Doctors -->
@@ -147,7 +180,7 @@
                         <HBox spacing="10">
                             <Button text="Create Doctor" styleClass="btn-primary" onAction="#handleAddDoctor" HBox.hgrow="ALWAYS"/>
                             <Button text="Update" styleClass="btn-ghost" onAction="#handleUpdateDoctor"/>
-                            <Button text="Remove" styleClass="btn-ghost danger" onAction="#handleRemoveDoctor"/>
+                            <Button text="Remove" styleClass="btn-action btn-action-red" onAction="#handleRemoveDoctor"/>
                         </HBox>
                         <Label fx:id="lblDoctorMsg" styleClass="content-meta"/>
                     </VBox>
@@ -158,10 +191,6 @@
             <VBox fx:id="sectionAnalytics" spacing="16" styleClass="content-root" visible="false" managed="false">
                 <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
                 <Label text="System Analytics" styleClass="content-title"/>
-                <BarChart fx:id="barBookingsBySpec" prefHeight="240">
-                    <xAxis><CategoryAxis label="Specialization"/></xAxis>
-                    <yAxis><NumberAxis label="Tokens"/></yAxis>
-                </BarChart>
                 <Label text="Revenue by Department" styleClass="section-heading"/>
                 <BarChart fx:id="barRevenueByDept" prefHeight="320">
                     <xAxis><CategoryAxis label="Department"/></xAxis>

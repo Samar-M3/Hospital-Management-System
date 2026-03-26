@@ -4,12 +4,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import util.SceneManager;
 import util.DBConnection;
-
 /**
  * JavaFX entry point for the Smart Hospital Management System.
  */
 public class App extends Application {
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Register the window so controllers can change scenes
