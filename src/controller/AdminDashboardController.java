@@ -242,6 +242,22 @@ public class AdminDashboardController implements Initializable {
             showPatientMsg("Fill all patient fields.", false);
             return null;
         }
+        if (name.matches(".*\\d.*")) {
+            showPatientMsg("Name cannot contain numbers.", false);
+            return null;
+        }
+        if (!phone.matches("\\d+")) {
+            showPatientMsg("Phone must contain digits only.", false);
+            return null;
+        }
+        if (phone.length() != 10) {
+            showPatientMsg("Phone number must be exactly 10 digits.", false);
+            return null;
+        }
+        if (!email.contains("@")) {
+            showPatientMsg("Email must contain @.", false);
+            return null;
+        }
         Patient p = new Patient();
         p.setPatientId(id);
         p.setName(name);
@@ -368,6 +384,14 @@ public class AdminDashboardController implements Initializable {
         String pass = pfPassword.getText();
         if (name.isEmpty() || spec.isEmpty() || shift == null || email.isEmpty()) {
             showDoctorMsg("Fill all fields.", false); return null;
+        }
+        if (name.matches(".*\\d.*")) {
+            showDoctorMsg("Name cannot contain numbers.", false);
+            return null;
+        }
+        if (!email.contains("@")) {
+            showDoctorMsg("Email must contain @.", false);
+            return null;
         }
         int deptId = parseDeptId(dept);
         Doctor d = new Doctor();

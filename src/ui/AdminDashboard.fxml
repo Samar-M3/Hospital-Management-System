@@ -25,6 +25,12 @@
 
     <left>
         <VBox fx:id="sidebar" spacing="10" styleClass="sidebar" prefWidth="230" alignment="TOP_LEFT">
+            <VBox spacing="2" alignment="CENTER" styleClass="sidebar-header">
+                <Label text="🏛" styleClass="sidebar-brand-icon"/>
+                <Label text="Admin Panel" styleClass="sidebar-brand"/>
+                <Label text="System Control" styleClass="sidebar-subtitle"/>
+            </VBox>
+            <Separator styleClass="sidebar-separator"/>
             <Label text="Navigation" styleClass="side-title"/>
             <Button fx:id="btnNavOverview" text="🏠  Overview" styleClass="side-btn side-btn-active" onAction="#handleNavOverview"/>
             <Button fx:id="btnNavPatients" text="👥  Patients" styleClass="side-btn" onAction="#handleNavPatients"/>

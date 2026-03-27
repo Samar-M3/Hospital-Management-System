@@ -28,13 +28,18 @@
 
     <left>
         <VBox fx:id="sidebar" spacing="10" styleClass="sidebar" prefWidth="230" alignment="TOP_LEFT">
+            <VBox spacing="2" alignment="CENTER" styleClass="sidebar-header">
+                <Label text="🧍" styleClass="sidebar-brand-icon"/>
+                <Label text="Patient Panel" styleClass="sidebar-brand"/>
+                <Label text="Stay organized" styleClass="sidebar-subtitle"/>
+            </VBox>
+            <Separator styleClass="sidebar-separator"/>
             <Label text="Navigation" styleClass="side-title"/>
             <Button fx:id="btnNavOverview" text="🏠  Overview" styleClass="side-btn side-btn-active" onAction="#handleNavOverview"/>
             <Button fx:id="btnNavBook" text="📅  Create Token" styleClass="side-btn" onAction="#handleNavBook"/>
             <Button fx:id="btnNavTokens" text="🎟️  My Tokens" styleClass="side-btn" onAction="#handleNavTokens"/>
             <Button fx:id="btnNavReports" text="📄  Reports" styleClass="side-btn" onAction="#handleNavReports"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="⏻  Logout" onAction="#handleLogout" styleClass="side-btn side-logout"/>
         </VBox>
     </left>
 

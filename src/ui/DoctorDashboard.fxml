@@ -32,6 +32,7 @@
             <VBox spacing="2" alignment="CENTER" styleClass="sidebar-header">
                 <Label text="👨‍⚕️" styleClass="sidebar-brand-icon"/>
                 <Label text="Doctor Panel" styleClass="sidebar-brand"/>
+                <Label text="Manage your day" styleClass="sidebar-subtitle"/>
             </VBox>
             <Separator styleClass="sidebar-separator"/>
             <Label text="MENU" styleClass="side-title"/>

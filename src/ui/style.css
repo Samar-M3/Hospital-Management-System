@@ -26,41 +26,64 @@
 }
 .nav-logo { -fx-text-fill: white; -fx-font-size: 20px; }
 
-/* Sidebar */
+/* Sidebar - refreshed look */
 .sidebar {
-    -fx-background-color: #0f172a;
+    -fx-background-color: linear-gradient(to bottom, #0e1527 0%, #0b1020 100%);
+    -fx-padding: 16 12;
     -fx-spacing: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0, 0, 6);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.22), 16, 0, 0, 8);
+}
+.sidebar-header {
+    -fx-alignment: CENTER;
+    -fx-padding: 10 10 6 10;
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 14;
+}
+.sidebar-brand-icon { -fx-text-fill: #7bdff6; -fx-font-size: 20px; }
+.sidebar-brand { -fx-text-fill: #e8f1ff; -fx-font-size: 13px; -fx-font-weight: 800; }
+.sidebar-subtitle { -fx-text-fill: #94a3b8; -fx-font-size: 11px; -fx-font-weight: 600; }
+.sidebar-separator {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-padding: 0 0 0 0;
 }
 .side-title {
-    -fx-text-fill: #a5b4c7;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-padding: 0 0 8 8;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+    -fx-padding: 4 0 6 6;
+    -fx-letter-spacing: 0.6px;
 }
 .side-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #d9e3f5;
+    -fx-text-fill: #dbe7ff;
     -fx-font-size: 13px;
-    -fx-font-weight: 600;
+    -fx-font-weight: 700;
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 10 12;
-    -fx-background-radius: 10;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: transparent;
+    -fx-graphic-text-gap: 10;
     -fx-cursor: hand;
 }
 .side-btn:hover {
     -fx-background-color: rgba(255,255,255,0.06);
+    -fx-border-color: rgba(255,255,255,0.10);
 }
 .side-btn-active, .side-btn:focused {
-    -fx-background-color: rgba(18,181,176,0.16);
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(gaussian, rgba(18,181,176,0.25), 14, 0, 0, 6);
+    -fx-background-color: linear-gradient(to right, #123c8c, #1572c7);
+    -fx-text-fill: #f7fbff;
+    -fx-effect: dropshadow(gaussian, rgba(21,114,199,0.32), 16, 0, 0, 8);
+    -fx-border-color: transparent;
 }
 .side-logout {
     -fx-text-fill: #f8d7da;
 }
 .side-logout:hover {
     -fx-background-color: rgba(242,85,85,0.14);
+    -fx-border-color: rgba(242,85,85,0.30);
 }
 
 /* Content area */

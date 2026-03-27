@@ -359,6 +359,11 @@ public class DoctorDashboardController implements Initializable {
     private void handleAddPatient() {
         Patient p = showPatientDialog(null);
         if (p != null) {
+            String validationError = validatePatientInput(p);
+            if (validationError != null) {
+                showInfo(validationError);
+                return;
+            }
             polymorphicPatientService.add(p); // polymorphism via CrudService reference
             notificationService.push("New patient added: " + p.getName());
             refreshPatients();
@@ -375,6 +380,11 @@ public class DoctorDashboardController implements Initializable {
         }
         Patient updated = showPatientDialog(selected);
         if (updated != null) {
+            String validationError = validatePatientInput(updated);
+            if (validationError != null) {
+                showInfo(validationError);
+                return;
+            }
             polymorphicPatientService.update(updated);
             refreshPatients();
             refreshStatsAndCharts();
@@ -508,9 +518,9 @@ public class DoctorDashboardController implements Initializable {
         dialog.setResultConverter(button -> {
             if (button == ButtonType.OK) {
                 Patient p = base == null ? new Patient() : base;
-                p.setName(nameField.getText());
-                p.setEmail(emailField.getText());
-                p.setContact(contactField.getText());
+                p.setName(nameField.getText().trim());
+                p.setEmail(emailField.getText().trim());
+                p.setContact(contactField.getText().trim());
                 p.setAge(parseIntSafe(ageField.getText(), p.getAge()));
                 p.setGender(genderBox.getValue());
                 if (p.getPatientId() == 0) {
@@ -523,6 +533,21 @@ public class DoctorDashboardController implements Initializable {
 
         Optional<Patient> result = dialog.showAndWait();
         return result.orElse(null);
+    }
+
+    private String validatePatientInput(Patient p) {
+        String name = p.getName() != null ? p.getName().trim() : "";
+        String email = p.getEmail() != null ? p.getEmail().trim() : "";
+        String contact = p.getContact() != null ? p.getContact().trim() : "";
+
+        if (name.isEmpty()) return "Name is required.";
+        if (name.matches(".*\\d.*")) return "Name cannot contain numbers.";
+        if (email.isEmpty()) return "Email is required.";
+        if (!email.contains("@")) return "Email must contain @.";
+        if (contact.isEmpty()) return "Phone number is required.";
+        if (!contact.matches("\\d+")) return "Phone number must contain digits only.";
+        if (contact.length() != 10) return "Phone number must be exactly 10 digits.";
+        return null;
     }
 
     private int parseIntSafe(String value, int fallback) {

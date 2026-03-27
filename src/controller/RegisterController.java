@@ -54,7 +54,25 @@ public class RegisterController implements Initializable {
             return;
         }
 
-        if (!email.contains("@") || !email.contains(".")) {
+        if (name.matches(".*\\d.*")) {
+            showError("Name cannot contain numbers.");
+            return;
+        }
+
+        if (!phone.matches("\\d+")) {
+            showError("Phone number must contain digits only.");
+            return;
+        }
+        if (phone.length() != 10) {
+            showError("Phone number must be exactly 10 digits.");
+            return;
+        }
+
+        if (!email.contains("@")) {
+            showError("Email must contain @.");
+            return;
+        }
+        if (!email.contains(".")) {
             showError("Please enter a valid email address.");
             return;
         }

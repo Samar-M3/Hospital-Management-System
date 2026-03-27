@@ -44,6 +44,11 @@ public class LoginController implements Initializable {
             return;
         }
 
+        if (!email.contains("@")) {
+            showError("Enter a valid email address (must contain @).");
+            return;
+        }
+
         AuthResult result = authService.authenticate(email, password);
         if (!result.isSuccess()) {
             showError("Invalid credentials. Please try again.");
