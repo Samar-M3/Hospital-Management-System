@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,6 +18,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -290,19 +292,58 @@ public class AdminDashboardController implements Initializable {
 
     private void loadRevenue(List<Token> tokens) {
         if (barRevenueByDept == null) return;
+
+        barRevenueByDept.setAnimated(false);
+        barRevenueByDept.setLegendVisible(true);
+        barRevenueByDept.setCategoryGap(18);
+        barRevenueByDept.setBarGap(8);
+        if (!barRevenueByDept.getStyleClass().contains("revenue-chart")) {
+            barRevenueByDept.getStyleClass().add("revenue-chart");
+        }
         barRevenueByDept.getData().clear();
+
         Map<String, Integer> rates = defaultRates();
-        Map<String, Double> revenue = new HashMap<>();
-        tokens.stream()
-                .filter(t -> "Completed".equalsIgnoreCase(t.getStatus()))
-                .forEach(t -> {
-                    String dept = normalizeSpec(t.getSpecialization());
-                    double charge = rates.getOrDefault(dept, 500);
-                    revenue.merge(dept, charge, Double::sum);
-                });
+        Map<String, Double> revenue = new LinkedHashMap<>();
+
+        // Seed categories so the chart renders even before data arrives
+        rates.keySet().forEach(k -> revenue.put(k, 0d));
+        doctorDAO.getAllDoctors().forEach(doc -> {
+            String dept = normalizeSpec(doc.getSpecialization());
+            revenue.putIfAbsent(dept, 0d);
+        });
+
+        if (tokens != null) {
+            tokens.forEach(t -> {
+                if ("cancelled".equals(normalizeStatus(t.getStatus()))) return;
+                String dept   = normalizeSpec(t.getSpecialization());
+                double charge = rates.getOrDefault(dept, 500);
+                revenue.merge(dept, charge, Double::sum);
+            });
+        }
+
+        boolean hasValues = revenue.values().stream().anyMatch(v -> v > 0);
+        barRevenueByDept.setTitle(hasValues ? "Revenue by Department" : "Revenue by Department (no token data yet)");
+        barRevenueByDept.getData().add(buildSeries("Revenue", revenue));
+
+        double maxValue = revenue.values().stream().mapToDouble(Double::doubleValue).max().orElse(0);
+        NumberAxis yAxis = (NumberAxis) barRevenueByDept.getYAxis();
+        yAxis.setAutoRanging(false);
+        double upper = Math.max(600, Math.ceil(maxValue / 100.0) * 100);
+        if (upper == 0) upper = 600;
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(upper);
+        yAxis.setTickUnit(100);
+    }
+
+    private XYChart.Series<String, Number> buildSeries(String name, Map<String, Double> data) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        revenue.forEach((dept, sum) -> series.getData().add(new XYChart.Data<>(dept, sum)));
-        barRevenueByDept.getData().add(series);
+        series.setName(name);
+        data.forEach((dept, sum) -> series.getData().add(new XYChart.Data<>(dept, sum)));
+        return series;
+    }
+
+    private String normalizeStatus(String status) {
+        return status == null ? "" : status.trim().toLowerCase();
     }
 
     private String normalizeSpec(String spec) {

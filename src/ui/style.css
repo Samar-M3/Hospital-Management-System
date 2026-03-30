@@ -555,3 +555,21 @@
 .report-section-solution .report-value { -fx-text-fill: #059669; -fx-font-weight: 600; }
 .report-section-meds { -fx-background-color: #fef3c7; -fx-background-radius: 10; -fx-padding: 12; }
 .report-section-notes { -fx-background-color: #f0fdf4; -fx-background-radius: 10; -fx-padding: 12; }
+
+/* === Charts =============================================================== */
+.revenue-chart .chart-plot-background { -fx-background-color: white; }
+.revenue-chart .chart-horizontal-grid-lines, .revenue-chart .chart-vertical-grid-lines {
+    -fx-stroke: #d7dbe2;
+    -fx-stroke-dash-array: 6 6;
+}
+.revenue-chart .chart-vertical-grid-lines { -fx-opacity: 0.8; }
+.revenue-chart .chart-bar { -fx-bar-fill: #f26b22; }
+.revenue-chart .default-color0.chart-bar { -fx-bar-fill: #f26b22; }
+.revenue-chart .chart-legend-item-symbol {
+    -fx-background-color: #f26b22;
+    -fx-background-radius: 3;
+    -fx-padding: 6;
+}
+.revenue-chart .chart-title { -fx-text-fill: #0f172a; -fx-font-weight: 800; }
+.revenue-chart .axis-label { -fx-text-fill: #334155; -fx-font-weight: 700; }
+.revenue-chart .chart-axis .tick-label { -fx-text-fill: #475569; -fx-font-size: 12px; }

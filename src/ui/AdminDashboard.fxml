@@ -198,7 +198,11 @@
                 <padding><Insets top="20" right="24" bottom="28" left="24"/></padding>
                 <Label text="System Analytics" styleClass="content-title"/>
                 <Label text="Revenue by Department" styleClass="section-heading"/>
-                <BarChart fx:id="barRevenueByDept" prefHeight="320">
+                <BarChart fx:id="barRevenueByDept"
+                          prefHeight="420"
+                          prefWidth="1200"
+                          VBox.vgrow="ALWAYS"
+                          styleClass="revenue-chart">
                     <xAxis><CategoryAxis label="Department"/></xAxis>
                     <yAxis><NumberAxis label="Revenue (Rs)"/></yAxis>
                 </BarChart>
