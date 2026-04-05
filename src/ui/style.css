@@ -573,3 +573,47 @@
 .revenue-chart .chart-title { -fx-text-fill: #0f172a; -fx-font-weight: 800; }
 .revenue-chart .axis-label { -fx-text-fill: #334155; -fx-font-weight: 700; }
 .revenue-chart .chart-axis .tick-label { -fx-text-fill: #475569; -fx-font-size: 12px; }
+
+/* === Patient Create Token Enhancements =================================== */
+.info-banner {
+    -fx-background-color: linear-gradient(to right, #e6f3ff, #f0f7ff);
+    -fx-padding: 12 14;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #d0e4ff;
+}
+.info-icon {
+    -fx-font-size: 16px;
+    -fx-text-fill: #0f7abf;
+}
+.pill {
+    -fx-background-color: rgba(15,122,191,0.14);
+    -fx-text-fill: #0f7abf;
+    -fx-padding: 4 10;
+    -fx-background-radius: 14;
+    -fx-font-weight: 700;
+    -fx-font-size: 11px;
+}
+.pill-ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: #d0e4ff;
+    -fx-border-radius: 14;
+}
+.summary-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #e6edf5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 8);
+    -fx-spacing: 10;
+}
+.summary-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #0f172a;
+    -fx-wrap-text: true;
+}
+.field-label.required {
+    -fx-text-fill: #0f172a;
+    -fx-font-weight: 700;
+}

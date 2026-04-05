@@ -65,6 +65,9 @@ public class PatientDashboardController implements Initializable {
     @FXML private Label lblCrowdLevel;
     @FXML private Label lblBestTime;
     @FXML private Label lblBookMessage;
+    @FXML private Label lblNotesCount;
+    @FXML private Label lblLiveSummary;
+    @FXML private Label lblLiveWait;
 
     // tokens
     @FXML private VBox tokenCardContainer;
@@ -86,6 +89,7 @@ public class PatientDashboardController implements Initializable {
     private final PatientRecordDAO patientRecordDAO = new PatientRecordDAO();
     private final ObservableList<String> problemOptions = FXCollections.observableArrayList();
     private boolean sidebarCollapsed = false;
+    private static final int MAX_NOTES_CHARS = 200;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -104,6 +108,7 @@ public class PatientDashboardController implements Initializable {
         populateProblemTypes();
         enableProblemSearch();
         setupShiftSelector();
+        setupLiveHelpers();
         setupReportTable();
 
         loadTokens();
@@ -177,18 +182,41 @@ public class PatientDashboardController implements Initializable {
             String term = val == null ? "" : val.toLowerCase();
             cbProblemType.getItems().setAll(problemOptions.filtered(opt -> opt.toLowerCase().contains(term)));
             cbProblemType.show();
+            updateLiveSummary();
         });
+        cbProblemType.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> updateLiveSummary());
     }
 
     private void setupShiftSelector() {
         if (shiftToggle == null) return;
         shiftToggle.selectedToggleProperty().addListener((obs, old, val) -> {
             if (val instanceof RadioButton rb) updateShiftHints(rb.getText());
+            updateLiveSummary();
         });
         if (rbMorning != null) {
             rbMorning.setSelected(true);
             updateShiftHints(rbMorning.getText());
         }
+    }
+
+    /** Character counter + live summary helpers. */
+    private void setupLiveHelpers() {
+        if (taProblem != null) {
+            taProblem.textProperty().addListener((obs, old, val) -> {
+                if (val != null && val.length() > MAX_NOTES_CHARS) {
+                    String clipped = val.substring(0, MAX_NOTES_CHARS);
+                    taProblem.setText(clipped);
+                    taProblem.positionCaret(clipped.length());
+                }
+                if (lblNotesCount != null) {
+                    int len = taProblem.getText() != null ? taProblem.getText().length() : 0;
+                    lblNotesCount.setText(len + "/" + MAX_NOTES_CHARS);
+                }
+                updateLiveSummary();
+            });
+            if (lblNotesCount != null) lblNotesCount.setText("0/" + MAX_NOTES_CHARS);
+        }
+        updateLiveSummary();
     }
 
     private void updateShiftHints(String shift) {
@@ -354,6 +382,18 @@ public class PatientDashboardController implements Initializable {
         String room = mapDepartmentToRoom(department);
         String healthProblem = problemType.isEmpty() ? notes : (notes.isEmpty() ? problemType : problemType + " - " + notes);
 
+        // Confirm before creating
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Create a pending token for " + department + "?\nShift: " + shift + "\nRoom: " + room,
+                ButtonType.YES, ButtonType.NO);
+        confirm.setHeaderText("Generate token now?");
+        confirm.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> res = confirm.showAndWait();
+        if (res.isEmpty() || res.get() != ButtonType.YES) {
+            showBookMsg("Cancelled by user.", false);
+            return;
+        }
+
         Token created = tokenDAO.createToken(p.getPatientId(), healthProblem, department, shift, apptDate, apptTime, room);
         if (created != null) {
             showBookMsg("Token ID " + created.getTokenId() + " created for " + created.getSpecialization() + ". Status: Pending.", true);
@@ -452,6 +492,30 @@ public class PatientDashboardController implements Initializable {
         return "101";
     }
 
+    private void updateLiveSummary() {
+        String problemType = cbProblemType != null && cbProblemType.getEditor() != null
+                ? cbProblemType.getEditor().getText().trim()
+                : "";
+        String notes = taProblem != null ? taProblem.getText().trim() : "";
+        String shift = getSelectedShift();
+        String dept = problemType.isEmpty() ? "General Medicine" : problemType;
+        String room = mapDepartmentToRoom(dept);
+        String summary = problemType.isEmpty()
+                ? "Describe your concern to match a specialist."
+                : problemType;
+        if (!notes.isEmpty()) {
+            String snippet = notes.length() > 80 ? notes.substring(0, 80) + "…" : notes;
+            summary += " — " + snippet;
+        }
+        if (lblLiveSummary != null) lblLiveSummary.setText(summary);
+
+        LocalTime best = bestTimeForShift(shift);
+        String bestTime = best != null ? best.format(DateTimeFormatter.ofPattern("h:mm a")) : "-";
+        if (lblLiveWait != null) {
+            lblLiveWait.setText("Shift: " + shift + " • Best time: " + bestTime + " • Room " + room);
+        }
+    }
+
     private VBox buildTokenCard(Token t, Patient p) {
         VBox card = new VBox(6);
         card.setStyle("-fx-background-color:white; -fx-border-color:#D8DCE8; -fx-border-radius:12; -fx-background-radius:12; -fx-padding:12 16;");
@@ -535,6 +599,7 @@ public class PatientDashboardController implements Initializable {
         } else {
             updateShiftHints("Day");
         }
+        updateLiveSummary();
     }
 
     private void showBookMsg(String msg, boolean ok) {
