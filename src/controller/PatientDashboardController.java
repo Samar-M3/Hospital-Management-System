@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
 import model.Patient;
 import model.PatientRecord;
 import model.PatientRecordDAO;
@@ -475,6 +476,29 @@ public class PatientDashboardController implements Initializable {
         statusLine.setStyle("-fx-font-weight:700; -fx-text-fill:" + statusColour(t.getStatus()));
 
         card.getChildren().addAll(title, patientLine, problemLine, deptLine, shiftLine, statusLine);
+
+        // Only pending tokens can be cancelled by the patient
+        if ("Pending".equals(t.getStatus()) && p != null) {
+            HBox actions = new HBox(8);
+            Button btnCancel = new Button("Cancel Token");
+            btnCancel.getStyleClass().addAll("btn-ghost", "danger");
+            btnCancel.setOnAction(evt -> {
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                        "Cancel token #" + displayNum + " for " + dept + "?", ButtonType.YES, ButtonType.NO);
+                confirm.setHeaderText("Cancel pending token");
+                confirm.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                Optional<ButtonType> result = confirm.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.YES) {
+                    boolean ok = tokenDAO.cancelPendingTokenForPatient(t.getTokenId(), p.getPatientId());
+                    showTokenMsg(ok ? "Token #" + displayNum + " cancelled." : "Could not cancel token.", ok);
+                    if (ok) {
+                        loadTokens(); // refresh cards + stats + next appointment
+                    }
+                }
+            });
+            actions.getChildren().add(btnCancel);
+            card.getChildren().add(actions);
+        }
         return card;
     }
 

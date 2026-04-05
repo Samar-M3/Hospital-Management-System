@@ -223,6 +223,23 @@ public class TokenDAO {
         }
     }
 
+    /** Patient cancels their own pending token. Guards against cancelling other users' tokens. */
+    public boolean cancelPendingTokenForPatient(int tokenId, int patientId) {
+        String sql = """
+            UPDATE Token
+               SET status = 'Cancelled'
+             WHERE token_id = ? AND patient_id = ? AND status = 'Pending'
+            """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, tokenId);
+            ps.setInt(2, patientId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[TokenDAO] cancelPendingTokenForPatient error: " + e.getMessage());
+            return false;
+        }
+    }
+
     /**
      * Generic status update (doctor completes, patient cancels).
      */

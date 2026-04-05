@@ -88,7 +88,8 @@ public class MyTokensController implements Initializable {
             showMessage("Only pending tokens can be cancelled.", false);
             return;
         }
-        boolean ok = tokenDAO.cancelToken(selected.getTokenId());
+        int patientId = SessionManager.getInstance().getCurrentPatient().getPatientId();
+        boolean ok = tokenDAO.cancelPendingTokenForPatient(selected.getTokenId(), patientId);
         showMessage(ok ? "Token cancelled." : "Could not cancel token.", ok);
         if (ok) loadTokens();
     }
